@@ -11,6 +11,8 @@
     <Platforms>x64;x86;ARM64</Platforms>
     <UseWinUITools>false</UseWinUITools>
     <EnableCoreMrtTooling>false</EnableCoreMrtTooling>
+
+    <WindowsAppSdkSelfContained>true</WindowsAppSdkSelfContained>
   </PropertyGroup>
 
   <ItemGroup>
