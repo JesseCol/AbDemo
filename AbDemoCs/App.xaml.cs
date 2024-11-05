@@ -28,9 +28,12 @@ namespace Microsoft.Windows.Foundation.UndockedRegFreeWinRTCS
         [DllImport("user32.dll", SetLastError = true)]
         public static extern short GetAsyncKeyState(int virtualKeyCode);
 
+        public static string RuntimeVersion { get; private set; }
+
         internal static string GetBaseDirectory()
         {
             var isShift = GetAsyncKeyState(0x10);
+            RuntimeVersion = isShift == 0 ? "1.6.240923002" : "1.5.241001000";
             return isShift == 0 ? AbDemoCs.LoaderLocations.LoaderB : AbDemoCs.LoaderLocations.LoaderA;
         }
     }

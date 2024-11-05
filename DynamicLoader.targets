@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Override a few targets in Microsoft.WindowsAppSDK.SelfContained.targets to enable A/B dynamic runtime loading behavior -->
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
     <!--Override to enable A/B loading, via WindowsAppSDKDynamicRuntime--> 
@@ -32,8 +33,22 @@
         </Exec>
         <Touch Files="$(ApplicationManifest)" />
     </Target>
-    
-  <!--Override referencing of self-contained payload for explicit A/B loading behavior-->
-  <Target Name="AddMicrosoftWindowsAppSDKPayloadFiles" />
+
+    <Target Name="ExtractMicrosoftWindowsAppSDKMsixFiles"
+      Condition="'$(MSBuildProjectExtension)' != '.wapproj'"
+      Inputs="@(MicrosoftWindowsAppSDKMsix)"
+      Outputs="$(MicrosoftWindowsAppSDKMsixContent)\Microsoft.UI.Xaml.Controls.pri;$(WindowsAppSDKAppxManifest)"
+      DependsOnTargets="GetExtractMicrosoftWindowsAppSDKMsixFilesInputs">
+        <Unzip
+          SourceFiles="@(MicrosoftWindowsAppSDKMsix)"
+          DestinationFolder="$(MicrosoftWindowsAppSDKMsixContent)"
+          SkipUnchangedFiles="true"
+          OverwriteReadOnlyFiles="true" />
+        <!--Reverse the rename of Microsoft.UI.Xaml.Controls.pri to resources.pri to enable use of both from the app -->
+        <!-- <Move SourceFiles="$(MicrosoftWindowsAppSDKMsixContent)\resources.pri" DestinationFiles="$(MicrosoftWindowsAppSDKMsixContent)\Microsoft.UI.Xaml.Controls.pri"/> -->
+    </Target>
+
+    <!--Override referencing of self-contained payload for explicit A/B loading behavior-->
+    <Target Name="AddMicrosoftWindowsAppSDKPayloadFiles" />
 
 </Project>

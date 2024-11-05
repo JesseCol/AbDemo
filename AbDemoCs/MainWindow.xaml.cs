@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.Windows.Foundation.UndockedRegFreeWinRTCS;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,11 +27,7 @@ namespace AbDemoCs
         public MainWindow()
         {
             this.InitializeComponent();
-        }
-
-        private void myButton_Click(object sender, RoutedEventArgs e)
-        {
-            myButton.Content = "Clicked";
+            this.runtimeLabel.Text = "WindowsAppSDK Runtime: " + DynamicRuntime.RuntimeVersion;
         }
     }
 }
