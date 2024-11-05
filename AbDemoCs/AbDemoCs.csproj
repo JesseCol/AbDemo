@@ -64,8 +64,8 @@
     <!--Generate C# source to capture MSBuild paths-->    
     <Target Name="CreateLoaderLocations">
         <PropertyGroup>
-            <LoaderALocation>$(SolutionDir)VersionALoader\$(Platform)\$(Configuration)\MsixContent</LoaderALocation>
-            <LoaderBLocation>$(SolutionDir)VersionBLoader\$(Platform)\$(Configuration)\MsixContent</LoaderBLocation>
+            <LoaderALocation>$(SolutionDir)VersionALoader\$(Platform)\$(Configuration)\MsixContent\</LoaderALocation>
+            <LoaderBLocation>$(SolutionDir)VersionBLoader\$(Platform)\$(Configuration)\MsixContent\</LoaderBLocation>
             <LoaderLocationsLines>
 namespace $(RootNamespace)
 {

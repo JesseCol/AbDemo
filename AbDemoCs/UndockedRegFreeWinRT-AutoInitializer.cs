@@ -7,6 +7,7 @@
 // </auto-generated>
 
 using System;
+using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -30,7 +31,14 @@ namespace Microsoft.Windows.Foundation.UndockedRegFreeWinRTCS
             // It's the act of calling the function causing the DllImport to load the DLL that
             // matters. This provides the moral equivalent of a native DLL's Import Address
             // Table (IAT) have an entry that's resolved when this module is loaded.
+            NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), DynamicRuntimeDllResolver);
             NativeMethods.WindowsAppRuntime_EnsureIsLoaded();
+        }
+
+        private static IntPtr DynamicRuntimeDllResolver(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
+        {
+            var libraryPath = Path.Combine(DynamicRuntime.GetBaseDirectory(), libraryName);
+            return NativeLibrary.Load(libraryPath, assembly, DllImportSearchPath.LegacyBehavior);
         }
     }
 }
