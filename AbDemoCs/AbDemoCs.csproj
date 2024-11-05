@@ -23,26 +23,6 @@
     <PrepareForBuildDependsOn>$(PrepareForBuildDependsOn);CreateLoaderLocations</PrepareForBuildDependsOn>
   </PropertyGroup>
 
-    
-    <!--If building any Xaml content, write XamlMetaDataProvider idl file -->
-    <Target Name="CreateLoaderLocations">
-        <PropertyGroup>
-            <LoaderALocation>$(SolutionDir)$(Platform)\$(Configuration)\VersionA</LoaderALocation>
-            <LoaderBLocation>$(SolutionDir)$(Platform)\$(Configuration)\VersionB</LoaderBLocation>
-            <LoaderLocationsLines>
-namespace $(RootNamespace)
-{
-    internal static class LoaderLocations
-    {
-        internal static string LoaderA => @"$(LoaderALocation)"%3b
-        internal static string LoaderB => @"$(LoaderBLocation)"%3b
-    }
-}
-</LoaderLocationsLines>
-        </PropertyGroup>
-        <WriteLinesToFile File="$(LoaderLocations)" Lines="$(LoaderLocationsLines)" Overwrite="true" WriteOnlyWhenDifferent="true"/>
-    </Target>
-    
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
@@ -68,6 +48,7 @@ namespace $(RootNamespace)
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <!--Reference loader projects to ensure they're built (dependencies), but ignore their output to avoid build breaks -->
     <ProjectReference Include="..\VersionALoader\VersionALoader.vcxproj" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\VersionBLoader\VersionBLoader.vcxproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
@@ -81,6 +62,26 @@ namespace $(RootNamespace)
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
   </PropertyGroup>
 
+    
+    <!--Generate C# source to capture MSBuild paths-->    
+    <Target Name="CreateLoaderLocations">
+        <PropertyGroup>
+            <LoaderALocation>$(SolutionDir)$(Platform)\$(Configuration)\VersionA</LoaderALocation>
+            <LoaderBLocation>$(SolutionDir)$(Platform)\$(Configuration)\VersionB</LoaderBLocation>
+            <LoaderLocationsLines>
+namespace $(RootNamespace)
+{
+    internal static class LoaderLocations
+    {
+        internal static string LoaderA => @"$(LoaderALocation)"%3b
+        internal static string LoaderB => @"$(LoaderBLocation)"%3b
+    }
+}
+</LoaderLocationsLines>
+        </PropertyGroup>
+        <WriteLinesToFile File="$(LoaderLocations)" Lines="$(LoaderLocationsLines)" Overwrite="true" WriteOnlyWhenDifferent="true"/>
+    </Target>
+    
     <!--Override to enable A/B loading, via WindowsAppSDKDynamicRuntime--> 
     <Target Name="CreateWinRTRegistration"
         BeforeTargets="AssignTargetPaths;CoreCompile"
