@@ -1,0 +1,119 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows10.0.26100.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <RootNamespace>AbDemoCs</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Platforms>x86;x64;ARM64</Platforms>
+    <RuntimeIdentifiers Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &gt;= 8">win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+    <RuntimeIdentifiers Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &lt; 8">win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
+    <PublishProfile>win-$(Platform).pubxml</PublishProfile>
+    <UseWinUI>true</UseWinUI>
+    <!--<EnableMsixTooling>true</EnableMsixTooling>-->
+
+    <!--A/B loading settings-->
+    <WindowsAppSDKDynamicRuntime>true</WindowsAppSDKDynamicRuntime>  <!--New variable--> 
+    <WindowsSdkPackageVersion>10.0.19041.38</WindowsSdkPackageVersion>
+    <!--<WindowsAppSDKFrameworkPackageReference>false</WindowsAppSDKFrameworkPackageReference>-->
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <WindowsPackageType>None</WindowsPackageType>
+    <WindowsAppSdkUndockedRegFreeWinRTInitialize>false</WindowsAppSdkUndockedRegFreeWinRTInitialize>
+    <LoaderLocations>$(GeneratedFilesDir)LoaderLocations.cs</LoaderLocations>
+    <PrepareForBuildDependsOn>$(PrepareForBuildDependsOn);CreateLoaderLocations</PrepareForBuildDependsOn>
+  </PropertyGroup>
+
+    
+    <!--If building any Xaml content, write XamlMetaDataProvider idl file -->
+    <Target Name="CreateLoaderLocations">
+        <PropertyGroup>
+            <LoaderALocation>$(SolutionDir)$(Platform)\$(Configuration)\VersionA</LoaderALocation>
+            <LoaderBLocation>$(SolutionDir)$(Platform)\$(Configuration)\VersionB</LoaderBLocation>
+            <LoaderLocationsLines>
+namespace $(RootNamespace)
+{
+    internal static class LoaderLocations
+    {
+        internal static string LoaderA => @"$(LoaderALocation)"%3b
+        internal static string LoaderB => @"$(LoaderBLocation)"%3b
+    }
+}
+</LoaderLocationsLines>
+        </PropertyGroup>
+        <WriteLinesToFile File="$(LoaderLocations)" Lines="$(LoaderLocationsLines)" Overwrite="true" WriteOnlyWhenDifferent="true"/>
+    </Target>
+    
+  <ItemGroup>
+    <Content Include="Assets\SplashScreen.scale-200.png" />
+    <Content Include="Assets\LockScreenLogo.scale-200.png" />
+    <Content Include="Assets\Square150x150Logo.scale-200.png" />
+    <Content Include="Assets\Square44x44Logo.scale-200.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+    <Content Include="Assets\StoreLogo.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.756" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240923002" />
+    <Manifest Include="$(ApplicationManifest)" />
+  </ItemGroup>
+
+  <!--
+    Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
+    Tools extension to be activated for this project even if the Windows App SDK Nuget
+    package has not yet been restored.
+  -->
+  <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+    <ProjectCapability Include="Msix" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VersionALoader\VersionALoader.vcxproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\VersionBLoader\VersionBLoader.vcxproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <!--
+    Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution
+    Explorer "Package and Publish" context menu entry to be enabled for this project even if
+    the Windows App SDK Nuget package has not yet been restored.
+  -->
+  <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+    <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
+  </PropertyGroup>
+
+    <!--Override to enable A/B loading, via WindowsAppSDKDynamicRuntime--> 
+    <Target Name="CreateWinRTRegistration"
+        BeforeTargets="AssignTargetPaths;CoreCompile"
+        DependsOnTargets="GetNewAppManifestValues;ExtractMicrosoftWindowsAppSDKMsixFiles"
+        Inputs="$(UserApplicationManifest);$(WindowsAppSDKAppxManifest)"
+        Outputs="$(ApplicationManifest)"
+        Condition="'$(MSBuildProjectExtension)' != '.wapproj'">
+        <MakeDir Directories="$(SelfContainedIntermediateOutputPath)Manifests\" />
+        <PropertyGroup>
+            <WindowsAppSDKAppManifest>$(SelfContainedIntermediateOutputPath)Manifests\WindowsAppSDK.manifest</WindowsAppSDKAppManifest>
+            <WindowsAppSDKRedirectDlls>false</WindowsAppSDKRedirectDlls>
+            <WindowsAppSDKRedirectDlls Condition="'$(WindowsAppSDKDynamicRuntime)'=='true'">true</WindowsAppSDKRedirectDlls>
+        </PropertyGroup>
+        <GenerateAppManifestFromAppx
+            RedirectDlls="$(WindowsAppSDKRedirectDlls)"
+            MsixContentDir="$(MicrosoftWindowsAppSDKMsixContent)"
+            InAppxManifest="$(WindowsAppSDKAppxManifest)"
+            OutAppManifest="$(WindowsAppSDKAppManifest)">
+        </GenerateAppManifestFromAppx>
+        <ItemGroup>
+            <MtMergeInputs Include="$(WindowsAppSDKAppManifest)" />
+            <MtMergeInputs Condition="'$(UserApplicationManifest)'!=''" Include="$(UserApplicationManifest)" />
+            <UpToDateCheckInput Condition="'$(UserApplicationManifest)'!=''" Include="$(UserApplicationManifest)" />
+        </ItemGroup>
+        <Message Importance="low" Text="WindowsAppSDKDynamicRuntime merging manifests: @(MtMergeInputs)" />
+        <Exec
+            Command="&quot;$(ManifestTool)&quot; -nologo -manifest @(MtMergeInputs->'&quot;%(Identity)&quot;', ' ') -out:&quot;$(ApplicationManifest)&quot;"
+            WorkingDirectory="$(MSBuildProjectDirectory)" >
+        </Exec>
+        <Touch Files="$(ApplicationManifest)" />
+    </Target>
+    
+  <!--Override referencing of self-contained payload for explicit A/B loading behavior-->
+  <Target Name="AddMicrosoftWindowsAppSDKPayloadFiles" />
+
+</Project>
