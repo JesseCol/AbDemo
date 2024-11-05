@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AbDemoCs", "AbDemoCs\AbDemo
 		{42ADB6AD-C25B-433A-ABD3-CC33C6B410BF} = {42ADB6AD-C25B-433A-ABD3-CC33C6B410BF}
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AbDemoWpf", "AbDemoWpf\AbDemoWpf.csproj", "{544971E3-FA44-4332-AA34-7C2E467F565D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM64 = Debug|ARM64
@@ -83,6 +85,18 @@ Global
 		{CFDFA7D6-4D6E-4319-87A1-4B2079EA0E65}.Release|x86.ActiveCfg = Release|x86
 		{CFDFA7D6-4D6E-4319-87A1-4B2079EA0E65}.Release|x86.Build.0 = Release|x86
 		{CFDFA7D6-4D6E-4319-87A1-4B2079EA0E65}.Release|x86.Deploy.0 = Release|x86
+		{544971E3-FA44-4332-AA34-7C2E467F565D}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{544971E3-FA44-4332-AA34-7C2E467F565D}.Debug|ARM64.Build.0 = Debug|ARM64
+		{544971E3-FA44-4332-AA34-7C2E467F565D}.Debug|x64.ActiveCfg = Debug|x64
+		{544971E3-FA44-4332-AA34-7C2E467F565D}.Debug|x64.Build.0 = Debug|x64
+		{544971E3-FA44-4332-AA34-7C2E467F565D}.Debug|x86.ActiveCfg = Debug|x86
+		{544971E3-FA44-4332-AA34-7C2E467F565D}.Debug|x86.Build.0 = Debug|x86
+		{544971E3-FA44-4332-AA34-7C2E467F565D}.Release|ARM64.ActiveCfg = Release|ARM64
+		{544971E3-FA44-4332-AA34-7C2E467F565D}.Release|ARM64.Build.0 = Release|ARM64
+		{544971E3-FA44-4332-AA34-7C2E467F565D}.Release|x64.ActiveCfg = Release|x64
+		{544971E3-FA44-4332-AA34-7C2E467F565D}.Release|x64.Build.0 = Release|x64
+		{544971E3-FA44-4332-AA34-7C2E467F565D}.Release|x86.ActiveCfg = Release|x86
+		{544971E3-FA44-4332-AA34-7C2E467F565D}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
