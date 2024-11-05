@@ -15,7 +15,6 @@
     <!--A/B loading settings-->
     <WindowsAppSDKDynamicRuntime>true</WindowsAppSDKDynamicRuntime>  <!--New variable--> 
     <WindowsSdkPackageVersion>10.0.19041.38</WindowsSdkPackageVersion>
-    <!--<WindowsAppSDKFrameworkPackageReference>false</WindowsAppSDKFrameworkPackageReference>-->
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
     <WindowsPackageType>None</WindowsPackageType>
     <WindowsAppSdkUndockedRegFreeWinRTInitialize>false</WindowsAppSdkUndockedRegFreeWinRTInitialize>
@@ -49,8 +48,8 @@
   </ItemGroup>
   <ItemGroup>
     <!--Reference loader projects to ensure they're built (dependencies), but ignore their output to avoid build breaks -->
-    <ProjectReference Include="..\VersionALoader\VersionALoader.vcxproj" ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\VersionBLoader\VersionBLoader.vcxproj" ReferenceOutputAssembly="false" />
+    <!--<ProjectReference Include="..\VersionALoader\VersionALoader.vcxproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\VersionBLoader\VersionBLoader.vcxproj" ReferenceOutputAssembly="false" />-->
   </ItemGroup>
 
   <!--
@@ -62,12 +61,11 @@
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
   </PropertyGroup>
 
-    
     <!--Generate C# source to capture MSBuild paths-->    
     <Target Name="CreateLoaderLocations">
         <PropertyGroup>
-            <LoaderALocation>$(SolutionDir)$(Platform)\$(Configuration)\VersionA</LoaderALocation>
-            <LoaderBLocation>$(SolutionDir)$(Platform)\$(Configuration)\VersionB</LoaderBLocation>
+            <LoaderALocation>$(SolutionDir)VersionALoader\$(Platform)\$(Configuration)\MsixContent</LoaderALocation>
+            <LoaderBLocation>$(SolutionDir)VersionBLoader\$(Platform)\$(Configuration)\MsixContent</LoaderBLocation>
             <LoaderLocationsLines>
 namespace $(RootNamespace)
 {
@@ -77,44 +75,9 @@ namespace $(RootNamespace)
         internal static string LoaderB => @"$(LoaderBLocation)"%3b
     }
 }
-</LoaderLocationsLines>
+            </LoaderLocationsLines>
         </PropertyGroup>
         <WriteLinesToFile File="$(LoaderLocations)" Lines="$(LoaderLocationsLines)" Overwrite="true" WriteOnlyWhenDifferent="true"/>
     </Target>
     
-    <!--Override to enable A/B loading, via WindowsAppSDKDynamicRuntime--> 
-    <Target Name="CreateWinRTRegistration"
-        BeforeTargets="AssignTargetPaths;CoreCompile"
-        DependsOnTargets="GetNewAppManifestValues;ExtractMicrosoftWindowsAppSDKMsixFiles"
-        Inputs="$(UserApplicationManifest);$(WindowsAppSDKAppxManifest)"
-        Outputs="$(ApplicationManifest)"
-        Condition="'$(MSBuildProjectExtension)' != '.wapproj'">
-        <MakeDir Directories="$(SelfContainedIntermediateOutputPath)Manifests\" />
-        <PropertyGroup>
-            <WindowsAppSDKAppManifest>$(SelfContainedIntermediateOutputPath)Manifests\WindowsAppSDK.manifest</WindowsAppSDKAppManifest>
-            <WindowsAppSDKRedirectDlls>false</WindowsAppSDKRedirectDlls>
-            <WindowsAppSDKRedirectDlls Condition="'$(WindowsAppSDKDynamicRuntime)'=='true'">true</WindowsAppSDKRedirectDlls>
-        </PropertyGroup>
-        <GenerateAppManifestFromAppx
-            RedirectDlls="$(WindowsAppSDKRedirectDlls)"
-            MsixContentDir="$(MicrosoftWindowsAppSDKMsixContent)"
-            InAppxManifest="$(WindowsAppSDKAppxManifest)"
-            OutAppManifest="$(WindowsAppSDKAppManifest)">
-        </GenerateAppManifestFromAppx>
-        <ItemGroup>
-            <MtMergeInputs Include="$(WindowsAppSDKAppManifest)" />
-            <MtMergeInputs Condition="'$(UserApplicationManifest)'!=''" Include="$(UserApplicationManifest)" />
-            <UpToDateCheckInput Condition="'$(UserApplicationManifest)'!=''" Include="$(UserApplicationManifest)" />
-        </ItemGroup>
-        <Message Importance="low" Text="WindowsAppSDKDynamicRuntime merging manifests: @(MtMergeInputs)" />
-        <Exec
-            Command="&quot;$(ManifestTool)&quot; -nologo -manifest @(MtMergeInputs->'&quot;%(Identity)&quot;', ' ') -out:&quot;$(ApplicationManifest)&quot;"
-            WorkingDirectory="$(MSBuildProjectDirectory)" >
-        </Exec>
-        <Touch Files="$(ApplicationManifest)" />
-    </Target>
-    
-  <!--Override referencing of self-contained payload for explicit A/B loading behavior-->
-  <Target Name="AddMicrosoftWindowsAppSDKPayloadFiles" />
-
 </Project>

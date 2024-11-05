@@ -4,12 +4,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AbDemo", "AbDemo\AbDemo.vcxproj", "{5602DE60-870D-4657-973E-4270DBC149CF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1679579F-3EEC-44CD-8D47-55D27D4EAF9B} = {1679579F-3EEC-44CD-8D47-55D27D4EAF9B}
+		{42ADB6AD-C25B-433A-ABD3-CC33C6B410BF} = {42ADB6AD-C25B-433A-ABD3-CC33C6B410BF}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VersionALoader", "VersionALoader\VersionALoader.vcxproj", "{1679579F-3EEC-44CD-8D47-55D27D4EAF9B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VersionBLoader", "VersionBLoader\VersionBLoader.vcxproj", "{42ADB6AD-C25B-433A-ABD3-CC33C6B410BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbDemoCs", "AbDemoCs\AbDemoCs.csproj", "{CFDFA7D6-4D6E-4319-87A1-4B2079EA0E65}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AbDemoCs", "AbDemoCs\AbDemoCs.csproj", "{CFDFA7D6-4D6E-4319-87A1-4B2079EA0E65}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1679579F-3EEC-44CD-8D47-55D27D4EAF9B} = {1679579F-3EEC-44CD-8D47-55D27D4EAF9B}
+		{42ADB6AD-C25B-433A-ABD3-CC33C6B410BF} = {42ADB6AD-C25B-433A-ABD3-CC33C6B410BF}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

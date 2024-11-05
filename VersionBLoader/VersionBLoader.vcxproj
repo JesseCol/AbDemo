@@ -154,4 +154,5 @@
     <Error Condition="!Exists('..\packages\Microsoft.WindowsAppSDK.1.6.240923002\build\native\Microsoft.WindowsAppSDK.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.WindowsAppSDK.1.6.240923002\build\native\Microsoft.WindowsAppSDK.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.WindowsAppSDK.1.6.240923002\build\native\Microsoft.WindowsAppSDK.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.WindowsAppSDK.1.6.240923002\build\native\Microsoft.WindowsAppSDK.targets'))" />
   </Target>
+  <Import Project="$(SolutionDir)DynamicLoader.targets" />
 </Project>
