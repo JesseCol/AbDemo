@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(SolutionDir)DynamicLoader.targets" />
+
+  <!--Override referencing of self-contained payload for explicit A/B loading behavior-->
+  <Target Name="AddMicrosoftWindowsAppSDKPayloadFiles"  />
 </Project>

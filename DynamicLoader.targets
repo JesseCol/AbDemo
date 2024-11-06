@@ -48,7 +48,4 @@
         <!-- <Move SourceFiles="$(MicrosoftWindowsAppSDKMsixContent)\resources.pri" DestinationFiles="$(MicrosoftWindowsAppSDKMsixContent)\Microsoft.UI.Xaml.Controls.pri"/> -->
     </Target>
 
-    <!--Override referencing of self-contained payload for explicit A/B loading behavior-->
-    <Target Name="AddMicrosoftWindowsAppSDKPayloadFiles" />
-
 </Project>

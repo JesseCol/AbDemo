@@ -29,7 +29,7 @@
     <!-- Wasdk_support: Use self-contained / unpackaged -->
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
     <WindowsPackageType>None</WindowsPackageType>
-    <OutDir>$(SolutionDir)\$(Platform)\$(Configuration)\VersionB\</OutDir>
+    <OutDir>$(SolutionDir)BuildOutput\$(Platform)\$(Configuration)\VersionB\</OutDir>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

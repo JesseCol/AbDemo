@@ -19,7 +19,7 @@
     <WindowsPackageType>None</WindowsPackageType>
     <WindowsAppSdkUndockedRegFreeWinRTInitialize>false</WindowsAppSdkUndockedRegFreeWinRTInitialize>
     <LoaderLocations>$(GeneratedFilesDir)LoaderLocations.cs</LoaderLocations>
-    <PrepareForBuildDependsOn>$(PrepareForBuildDependsOn);CreateLoaderLocations</PrepareForBuildDependsOn>
+    <OutDir>$(SolutionDir)BuildOutput\$(Platform)\$(Configuration)</OutDir>
   </PropertyGroup>
 
   <ItemGroup>
@@ -60,24 +60,5 @@
   <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
   </PropertyGroup>
-
-    <!--Generate C# source to capture MSBuild paths-->    
-    <Target Name="CreateLoaderLocations">
-        <PropertyGroup>
-            <LoaderALocation>$(SolutionDir)VersionALoader\$(Platform)\$(Configuration)\MsixContent\</LoaderALocation>
-            <LoaderBLocation>$(SolutionDir)VersionBLoader\$(Platform)\$(Configuration)\MsixContent\</LoaderBLocation>
-            <LoaderLocationsLines>
-namespace $(RootNamespace)
-{
-    internal static class LoaderLocations
-    {
-        internal static string LoaderA => @"$(LoaderALocation)"%3b
-        internal static string LoaderB => @"$(LoaderBLocation)"%3b
-    }
-}
-            </LoaderLocationsLines>
-        </PropertyGroup>
-        <WriteLinesToFile File="$(LoaderLocations)" Lines="$(LoaderLocationsLines)" Overwrite="true" WriteOnlyWhenDifferent="true"/>
-    </Target>
     
 </Project>

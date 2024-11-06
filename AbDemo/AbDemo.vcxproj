@@ -164,4 +164,7 @@
     <Error Condition="!Exists('..\packages\Microsoft.WindowsAppSDK.1.5.241001000\build\native\Microsoft.WindowsAppSDK.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.WindowsAppSDK.1.5.241001000\build\native\Microsoft.WindowsAppSDK.targets'))" />
   </Target>
   <Import Project="$(SolutionDir)DynamicLoader.targets" />
+
+    <!--Override referencing of self-contained payload for explicit A/B loading behavior-->
+  <Target Name="AddMicrosoftWindowsAppSDKPayloadFiles"  />
 </Project>

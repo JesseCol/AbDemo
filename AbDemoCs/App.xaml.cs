@@ -5,9 +5,9 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using Microsoft.UI.Xaml.Shapes;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -34,7 +34,13 @@ namespace Microsoft.Windows.Foundation.UndockedRegFreeWinRTCS
         {
             var isShift = GetAsyncKeyState(0x10);
             RuntimeVersion = isShift == 0 ? "1.6.240923002" : "1.5.241001000";
-            return isShift == 0 ? AbDemoCs.LoaderLocations.LoaderB : AbDemoCs.LoaderLocations.LoaderA;
+            
+            var dir = AppContext.BaseDirectory;
+            var versionDir = isShift == 0 ? Path.Join(dir, "VersionB\\") : Path.Join(dir, "VersionA\\");
+
+            Debug.WriteLine("Loading WinAppRuntime from dir: " + versionDir);
+
+            return versionDir;
         }
     }
 }
