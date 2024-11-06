@@ -47,8 +47,32 @@
         <!--Reverse the rename of Microsoft.UI.Xaml.Controls.pri to resources.pri to enable use of both from the app -->
         <!-- <Move SourceFiles="$(MicrosoftWindowsAppSDKMsixContent)\resources.pri" DestinationFiles="$(MicrosoftWindowsAppSDKMsixContent)\Microsoft.UI.Xaml.Controls.pri"/> -->
     </Target>
-
-    <!--Override referencing of self-contained payload for explicit A/B loading behavior-->
-    <Target Name="AddMicrosoftWindowsAppSDKPayloadFiles" />
+    
+  <Target Name="AddMicrosoftWindowsAppSDKPayloadFiles"
+    Condition="'$(WindowsAppSDKDynamicRuntimeDirectory)' != ''"
+    BeforeTargets="AssignTargetPaths;CoreCompile"
+    DependsOnTargets="ExtractMicrosoftWindowsAppSDKMsixFiles" >
+    <ItemGroup>
+      <MicrosoftWindowsAppSDKFiles Include="$(MicrosoftWindowsAppSDKMsixContent)\**\*.dll"/>
+      <MicrosoftWindowsAppSDKFiles Include="$(MicrosoftWindowsAppSDKMsixContent)\**\restartAgent.exe"/>
+      <MicrosoftWindowsAppSDKFiles Include="$(MicrosoftWindowsAppSDKMsixContent)\**\map.html"/>
+      <MicrosoftWindowsAppSDKFiles Include="$(MicrosoftWindowsAppSDKMsixContent)\**\*.mui"/>
+      <MicrosoftWindowsAppSDKFiles Include="$(MicrosoftWindowsAppSDKMsixContent)\**\*.png"/>
+      <MicrosoftWindowsAppSDKFiles Include="$(MicrosoftWindowsAppSDKMsixContent)\**\*.winmd"/>
+      <MicrosoftWindowsAppSDKFiles Include="$(MicrosoftWindowsAppSDKMsixContent)\**\*.xaml"/>
+      <MicrosoftWindowsAppSDKFiles Include="$(MicrosoftWindowsAppSDKMsixContent)\**\*.xbf"/>
+      <MicrosoftWindowsAppSDKFiles Remove="@(MicrosoftWindowsAppSDKFilesExcluded)"/>
+      <MicrosoftWindowsAppSDKFilesRes Include="$(MicrosoftWindowsAppSDKMsixContent)\**\*.pri"/>
+    </ItemGroup>
+    <CreateItem Include="@(MicrosoftWindowsAppSDKFiles)"
+        AdditionalMetadata="CopyToOutputDirectory=PreserveNewest;Link=$(WindowsAppSDKDynamicRuntimeDirectory)\%(MicrosoftWindowsAppSDKFiles.RecursiveDir)%(MicrosoftWindowsAppSDKFiles.Filename)%(MicrosoftWindowsAppSDKFiles.Extension)" >
+      <Output TaskParameter="Include" ItemName="None"/>
+    </CreateItem>
+    <CreateItem Include="@(MicrosoftWindowsAppSDKFilesRes)"
+        AdditionalMetadata="CopyToOutputDirectory=PreserveNewest;Link=$(WindowsAppSDKDynamicRuntimeDirectory)\%(MicrosoftWindowsAppSDKFilesRes.RecursiveDir)%(MicrosoftWindowsAppSDKFilesRes.Filename)%(MicrosoftWindowsAppSDKFilesRes.Extension)" >
+      <!-- <Output TaskParameter="Include" ItemName="ReferenceCopyLocalPaths"/> -->
+      <Output TaskParameter="Include" ItemName="None"/>
+    </CreateItem>
+  </Target>
 
 </Project>

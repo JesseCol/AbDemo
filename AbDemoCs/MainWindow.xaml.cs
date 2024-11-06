@@ -27,7 +27,7 @@ namespace AbDemoCs
         public MainWindow()
         {
             this.InitializeComponent();
-            this.runtimeLabel.Text = "WindowsAppSDK Runtime: " + DynamicRuntime.RuntimeVersion;
+            this.runtimeLabel.Text = DynamicRuntime.WindowsAppRuntimeVersion;
         }
     }
 }

@@ -393,4 +393,4 @@ eng/common/VersionInfo/AssemblyInfo.cs
 eng/common/VersionInfo/AssemblyInfo.ver
 
 # A/B loader generated source
-**/LoaderLocations.cs
+**/WindowsAppRuntimeVersions.cs
