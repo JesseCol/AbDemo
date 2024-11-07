@@ -33,11 +33,15 @@ namespace Microsoft.Windows.Foundation.UndockedRegFreeWinRTCS
 
         internal static string GetBaseDirectory()
         {
-            var isShift = GetAsyncKeyState(0x10);
-            WindowsAppRuntimeVersion = "Microsoft.WindowsAppSDK." + (isShift == 0 ? WindowsAppRuntimeVersions.VersionB : WindowsAppRuntimeVersions.VersionA);
-            var WindowsAppRuntimeDir = AppContext.BaseDirectory + WindowsAppRuntimeVersion + "\\";
-            return WindowsAppRuntimeDir;
+            if (WindowsAppRuntimeVersion == null)
+            {
+                var isShift = GetAsyncKeyState(0x10);
+                string version = (isShift == 0 ? WindowsAppRuntimeVersions.VersionB : WindowsAppRuntimeVersions.VersionA);
+                WindowsAppRuntimeVersion = "Microsoft.WindowsAppSDK." + version;
+            }
+            return AppContext.BaseDirectory + WindowsAppRuntimeVersion + "\\";
         }
+
     }
 }
 
